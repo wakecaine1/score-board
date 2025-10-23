@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ScoreboardService {
     Match startGame(String homeTeam, String awayTeam);
-    void finishGame(String homeTeam, String awayTeam);
-    void updateScore(String home, int homeScore, String awayTeam, int awayScore);
+    void finishGame(Match match);
+    void updateScore(Match match, int homeScore, int awayScore);
     List<Match> getSummary();
 }

@@ -1,6 +1,7 @@
 package com.sport.scoreboard.domain.service;
 
 import com.sport.scoreboard.domain.model.Match;
+import com.sport.scoreboard.domain.model.Team;
 import com.sport.scoreboard.domain.service.impl.FootballScoreboardService;
 import com.sport.scoreboard.repository.MatchRepository;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,13 +66,15 @@ public class FootballScoreboardServiceFailureTest {
     }
 
     @Test
-    void when_UpdateNotFoundGame_expect_IllegalArgumentException(){
+    void when_UpdateNotFoundGame_expect_IllegalArgumentException() {
         //given
-        Match match = new Match("Germany", "Poland", 0, 0, 1L);
-        when(repository.findByTeams("Germany", "Poland")).thenReturn(Optional.of(match));
+        var homeTeam = new Team("Germany");
+        var awayTeam = new Team("Poland");
+        Match match = new Match(homeTeam, awayTeam, 0, 0, OffsetDateTime.now());
+        when(repository.findByTeams(homeTeam.getName(), awayTeam.getName())).thenReturn(Optional.of(match));
 
         // when && then
-        assertThatThrownBy(() -> service.updateScore("Germany", -1, "Hungary", 3))
+        assertThatThrownBy(() -> service.updateScore(match, -1, 3))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("Score cannot be negative");
 
@@ -78,12 +82,14 @@ public class FootballScoreboardServiceFailureTest {
     }
 
     @Test
-    void when_FinishNotFoundGame_expect_IllegalStateException(){
+    void when_FinishNotFoundGame_expect_IllegalStateException() {
         //given
-        when(repository.findByTeams("USA", "Poland")).thenReturn(Optional.empty());
+        var homeTeam = new Team("USA");
+        var awayTeam = new Team("Poland");
+        when(repository.findByTeams(homeTeam.getName(), awayTeam.getName())).thenReturn(Optional.empty());
 
         //when && then
-        assertThatThrownBy(() -> service.finishGame("USA", "Poland"))
+        assertThatThrownBy(() -> service.finishGame(new Match(homeTeam, awayTeam, 0, 0, OffsetDateTime.now())))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Cannot finish match that does not exist");
 
