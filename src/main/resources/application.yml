@@ -1,0 +1,12 @@
+app:
+  name: "Football Scoreboard"
+  description: "Live Football World Cup Score Board"
+
+spring:
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: WARN
+    org.sport.scoreboard: INFO

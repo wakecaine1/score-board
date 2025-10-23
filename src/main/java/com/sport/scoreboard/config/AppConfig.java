@@ -1,4 +1,4 @@
-package org.sport.scoreboard.config;
+package com.sport.scoreboard.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
