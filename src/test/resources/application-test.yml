@@ -1,0 +1,8 @@
+app:
+  name: "Football Scoreboard Tests"
+  description: "Live Football World Cup Score Board Tests"
+
+logging:
+  level:
+    root: WARN
+    org.sport.scoreboard: INFO
